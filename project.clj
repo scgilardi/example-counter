@@ -15,9 +15,7 @@
                                cljsjs/react-dom-server]]
                  [reagent "0.9.1"]]
 
-  :plugins [[lein-figwheel "0.5.19"]
-            [lein-cljsbuild "1.1.7"]
-            [lein-marginalia "0.9.1"]]
+  :plugins [[lein-cljsbuild "1.1.7"]]
 
   :source-paths ["src/clj"]
 
@@ -28,21 +26,20 @@
                 :source-paths ["src/cljs"]
 
                 ;; If no code is to be run, set :figwheel true for continued automagical reloading
-                :figwheel     {:on-jsload "keechma-counter.core/on-js-reload"}
+                :figwheel     {:on-jsload "keechma-counter.app/on-js-reload"}
 
-                :compiler     {:main                 keechma-counter.core
+                :compiler     {:main                 keechma-counter.app
                                :asset-path           "js/compiled/dev"
                                :optimizations        :none
                                :output-to            "resources/public/js/compiled/keechma_counter.js"
                                :output-dir           "resources/public/js/compiled/dev"
                                :source-map-timestamp true}}
 
-               ;; This next build is an compressed minified build for
-               ;; production. You can build this with:
-               ;; lein cljsbuild once min
+               ;; This next build is an compressed minified build for production.
+               ;; You can build this with: `lein cljsbuild once min`
                {:id           "min"
                 :source-paths ["src/cljs"]
-                :compiler     {:main            keechma-counter.core
+                :compiler     {:main            keechma-counter.app
                                :optimizations   :advanced
                                :output-to       "resources/public/js/compiled/keechma_counter.js"
                                :output-dir      "resources/public/js/compiled/min"
@@ -80,4 +77,14 @@
 
              ;; to configure a different figwheel logfile path
              ;; :server-logfile "tmp/logs/figwheel-logfile.log"
-             })
+             }
+
+  :profiles
+  {:dev
+   {:dependencies [[figwheel-sidecar "0.5.19"]
+                   [com.cemerick/piggieback "0.2.2"]
+                   [binaryage/devtools "0.9.11"]]
+
+    :plugins      [[lein-figwheel "0.5.18"]
+                   [lein-doo "0.1.7"]
+                   [lein-marginalia "0.9.1"]]}})
