@@ -1,18 +1,12 @@
-(ns keechma-counter.core
+(ns keechma-counter.app
   (:require [keechma-counter.controllers.counter :as counter]
             [keechma-counter.ui.main :as main]
-            [keechma.app-state :as app-state])
-  (:require-macros [reagent.ratom :refer [reaction]]))
+            [keechma-counter.subscriptions :as subscriptions]
+            [keechma.app-state :as app-state]))
 
 (enable-console-print!)
 
-(defn counter-value-sub
-  "Subscription that returns the current value of the counter."
-  [app-state]
-  (reaction
-   (get-in @app-state [:kv :counter])))
-
-(def app-definition
+(def definition
   "Definition of the application.
 
   - `:controllers` param holds all of the controllers needed to run the app
@@ -23,29 +17,29 @@
   - `:subscriptions` param holds the application subscriptions"
   {:controllers {:counter (counter/->Controller)}
    :components {:main (assoc main/component :topic :counter)}
-   :subscriptions {:counter-value counter-value-sub}
+   :subscriptions {:counter-value subscriptions/counter-value}
    :html-element (.getElementById js/document "app")})
 
 (defonce running-app (clojure.core/atom nil))
 
-(defn start-app!
+(defn start!
   "Helper function that starts the application."
   []
-  (reset! running-app (app-state/start! app-definition)))
+  (reset! running-app (app-state/start! definition)))
 
-(defn restart-app!
+(defn restart!
   "Helper function that restarts the application whenever the
   code is hot reloaded."
   []
   (let [current @running-app]
     (if current
-      (app-state/stop! current start-app!)
-      (start-app!))))
+      (app-state/stop! current start!)
+      (start!))))
 
-(restart-app!)
+(restart!)
 
 (defn on-js-reload []
   ;; optionally touch your app-state to force rerendering depending on
   ;; your application
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+  )
