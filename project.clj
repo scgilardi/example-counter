@@ -85,6 +85,6 @@
                    [com.cemerick/piggieback "0.2.2"]
                    [binaryage/devtools "0.9.11"]]
 
-    :plugins      [[lein-figwheel "0.5.18"]
+    :plugins      [[lein-figwheel "0.5.19"]
                    [lein-doo "0.1.7"]
                    [lein-marginalia "0.9.1"]]}})
